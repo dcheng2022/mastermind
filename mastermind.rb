@@ -13,6 +13,17 @@ def guess_getter
   loop do
     guess_array = gets.chomp.split
     return guess_array if guess_array.all? { |guess| choices.include?(guess) } && guess_array.length == 4
+
     puts 'Invalid guess! Please try again.'
   end
 end
+
+def guess_checker(guess_array, pattern)
+  feedback = { color: 0, color_and_pos: 0 }
+  guess_array.each_with_index do |guess, idx|
+    feedback[:color_and_pos] += 1 if guess == pattern[idx]
+  end
+  puts "Correct color and position: #{feedback[:color_and_pos]}"
+end
+
+guess_checker(guess_getter, create_code)
