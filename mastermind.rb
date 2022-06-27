@@ -21,16 +21,12 @@ end
 def guess_checker(guess_array, pattern)
   feedback = { color: 0, color_and_pos: 0 }
   pattern_copy = [].concat(pattern)
-  matched_indices = []
   guess_array.each_with_index do |guess, idx|
-    if guess == pattern_copy[idx]
-      matched_indices << idx
-      feedback[:color_and_pos] += 1
-    end
-  end
-  matched_indices.each do |idx|
+    next unless guess == pattern_copy[idx]
+
     guess_array[idx] = nil
     pattern_copy[idx] = nil
+    feedback[:color_and_pos] += 1
   end
   guess_array.compact!
   pattern_copy.compact!
