@@ -34,7 +34,6 @@ def guess_checker(guess_array, pattern)
   end
   guess_array.compact!
   pattern_copy.compact!
-  #binding.pry
   guess_array.uniq.each do |guess|
     pattern_color_amount = pattern_copy.reduce(0) { |sum, color| color == guess ? sum += 1 : sum }
     guess_color_amount = guess_array.reduce(0) { |sum, color| color == guess ? sum += 1 : sum }
