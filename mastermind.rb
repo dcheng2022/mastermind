@@ -37,6 +37,25 @@ def guess_checker(guess_array, pattern)
   end
   puts "Correct color and position: #{feedback[:color_and_pos]}"
   puts "Correct color only: #{feedback[:color]}"
+  feedback
 end
 
-guess_checker(guess_getter, code_creator)
+def game
+  puts 'Welcome to Mastermind! The goal of this game is to crack a code created by the codemaker. This code is four items long and draws from six different colors or a blank space, with repeats allowed. You will be given feedback on the accuracy of every guess. Break the code in 12 tries or lose!'
+  puts 'The codebreaker has chosen a code.'
+  code = code_creator
+  turns = 1
+  loop do
+    feedback = guess_checker(guess_getter, code)
+    if feedback[:color_and_pos] == 4
+      puts "You cracked the code in #{turns} guesses. Hooray!"
+      break
+    elsif turns == 12
+      puts "You were unable to break the code #{code} in 12 tries."
+      break
+    end
+    turns += 1
+  end
+end
+
+game
