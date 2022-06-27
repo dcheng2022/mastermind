@@ -2,7 +2,7 @@ require 'pry-byebug'
 
 def code_creator
   choices = %w[red blue green orange purple yellow blank]
-  pattern = [choices.sample, choices.sample, choices.sample, choices.sample]
+  pattern = Array.new(4).map { choices.sample }
   p pattern
   pattern
 end
