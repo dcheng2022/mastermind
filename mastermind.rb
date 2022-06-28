@@ -20,19 +20,20 @@ end
 
 def guess_checker(guess_array, pattern)
   feedback = { color: 0, color_and_pos: 0 }
+  guess_copy = [].concat(guess_array)
   pattern_copy = [].concat(pattern)
-  guess_array.each_with_index do |guess, idx|
+  guess_copy.each_with_index do |guess, idx|
     next unless guess == pattern_copy[idx]
 
-    guess_array[idx] = nil
+    guess_copy[idx] = nil
     pattern_copy[idx] = nil
     feedback[:color_and_pos] += 1
   end
-  guess_array.compact!
+  guess_copy.compact!
   pattern_copy.compact!
-  guess_array.uniq.each do |guess|
+  guess_copy.uniq.each do |guess|
     pattern_color_amount = pattern_copy.reduce(0) { |sum, color| color == guess ? sum += 1 : sum }
-    guess_color_amount = guess_array.reduce(0) { |sum, color| color == guess ? sum += 1 : sum }
+    guess_color_amount = guess_copy.reduce(0) { |sum, color| color == guess ? sum += 1 : sum }
     feedback[:color] += pattern_color_amount >= guess_color_amount ? guess_color_amount : pattern_color_amount
   end
   puts "Correct color and position: #{feedback[:color_and_pos]}"
