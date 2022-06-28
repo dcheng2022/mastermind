@@ -40,6 +40,34 @@ def guess_checker(guess_array, pattern)
   feedback
 end
 
+def computer_guesser(pattern)
+  tries = 0
+  choices = %w[red blue yellow green purple orange blank]
+  colors_in_code = []
+  choices.each do |color|
+    guess_array = Array.new(4, color)
+    tries += 1
+    p guess_array
+    feedback = guess_checker(guess_array, pattern)
+    colors_in_code << color if feedback[:color].positive? || feedback[:color_and_pos].positive?
+    break if colors_in_code.length == 4
+  end
+  loop do
+    combination_guess = []
+    if colors_in_code.length == 4
+      combination_guess = colors_in_code.shuffle
+    else
+      combination_guess << colors_in_code.sample while combination_guess.length < 4
+    end
+    tries += 1
+    p combination_guess
+    feedback = guess_checker(combination_guess, pattern)
+    break if feedback[:color_and_pos] == 4
+  end
+  puts "Pattern: #{pattern}"
+  puts "Tries needed: #{tries}"
+end
+
 def game
   puts 'Welcome to Mastermind! The goal of this game is to crack a code created by the codemaker. This code is four items long and draws from six different colors or a blank space, with repeats allowed. You will be given feedback on the accuracy of every guess. Break the code in 12 tries or lose!'
   puts 'The codebreaker has chosen a code.'
@@ -58,4 +86,6 @@ def game
   end
 end
 
-game
+#game
+
+computer_guesser(code_creator)
