@@ -42,31 +42,20 @@ def guess_checker(guess_array, pattern)
 end
 
 def computer_guesser(pattern)
-  tries = 0
   choices = %w[red blue yellow green purple orange blank]
-  colors_in_code = []
-  choices.each do |color|
-    guess_array = Array.new(4, color)
-    tries += 1
-    p guess_array
-    feedback = guess_checker(guess_array, pattern)
-    colors_in_code << color if feedback[:color].positive? || feedback[:color_and_pos].positive?
-    break if colors_in_code.length == 4
+  learning_array = []
+  total_matches = 0
+  choices.each_with_index do |color, idx|
+    learning_array.concat(Array.new(4 - total_matches, color))
+    feedback = guess_checker(learning_array.rotate(idx), pattern)
+    total_matches = feedback[:color_and_pos] + feedback[:color]
+    learning_array.pop while learning_array.length > total_matches
+    break if total_matches == 4
   end
-  loop do
-    combination_guess = []
-    if colors_in_code.length == 4
-      combination_guess = colors_in_code.shuffle
-    else
-      combination_guess << colors_in_code.sample while combination_guess.length < 4
-    end
-    tries += 1
-    p combination_guess
-    feedback = guess_checker(combination_guess, pattern)
+  learning_array.permutation do |permutation|
+    feedback = guess_checker(permutation, pattern)
     break if feedback[:color_and_pos] == 4
   end
-  puts "Pattern: #{pattern}"
-  puts "Tries needed: #{tries}"
 end
 
 def game
