@@ -45,11 +45,17 @@ def computer_guesser(pattern)
   choices = %w[red blue yellow green purple orange blank]
   learning_array = []
   permutation_array = []
+  lock_info = { index: [] }
   total_matches = 0
-  choices.each_with_index do |color, idx|
+  choices.shuffle.each_with_index do |color, idx|
     learning_array.concat(Array.new(4 - total_matches, color))
-    feedback = guess_checker(learning_array.rotate(idx), pattern)
+    rotated_learning_array = learning_array.rotate(idx)
+    feedback = guess_checker(rotated_learning_array, pattern)
     total_matches = feedback[:color_and_pos] + feedback[:color]
+    if learning_array.uniq.length == 2 && total_matches == feedback[:color_and_pos]
+      lock_info[:color] = learning_array.uniq.reject { |e| e == color }.join
+      rotated_learning_array.each_with_index { |e, index| lock_info[:index] << index if e == lock_info[:color] }
+    end
     learning_array.pop while learning_array.length > total_matches
     next unless total_matches == 4
     return true if feedback[:color_and_pos] == 4
@@ -58,9 +64,16 @@ def computer_guesser(pattern)
   end
   learning_array.permutation { |perm| permutation_array << perm }
   permutation_array.uniq.each do |uniq_perm|
+    next unless lock_info[:index].empty? || permutation_match_checker(lock_info, uniq_perm)
+
     feedback = guess_checker(uniq_perm, pattern)
     break if feedback[:color_and_pos] == 4
   end
+end
+
+def permutation_match_checker(lock_info, perm)
+  lock_info[:index].each { |idx| return false unless perm[idx] == lock_info[:color] }
+  true
 end
 
 def game
