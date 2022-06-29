@@ -44,16 +44,21 @@ end
 def computer_guesser(pattern)
   choices = %w[red blue yellow green purple orange blank]
   learning_array = []
+  permutation_array = []
   total_matches = 0
   choices.each_with_index do |color, idx|
     learning_array.concat(Array.new(4 - total_matches, color))
     feedback = guess_checker(learning_array.rotate(idx), pattern)
     total_matches = feedback[:color_and_pos] + feedback[:color]
     learning_array.pop while learning_array.length > total_matches
-    break if total_matches == 4
+    next unless total_matches == 4
+    return true if feedback[:color_and_pos] == 4
+
+    break
   end
-  learning_array.permutation do |permutation|
-    feedback = guess_checker(permutation, pattern)
+  learning_array.permutation { |perm| permutation_array << perm }
+  permutation_array.uniq.each do |uniq_perm|
+    feedback = guess_checker(uniq_perm, pattern)
     break if feedback[:color_and_pos] == 4
   end
 end
