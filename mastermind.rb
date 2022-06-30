@@ -45,6 +45,7 @@ def computer_guesser(pattern)
   choices = %w[red blue green orange purple yellow blank]
   learning_array = []
   lock_info = { index: [], color: [] }
+  purge_hash = { index: [], color: [] }
   total_matches = 0
   choices.shuffle.each_with_index do |color, idx|
     learning_array.concat(Array.new(4 - total_matches, color))
@@ -56,13 +57,17 @@ def computer_guesser(pattern)
       rotated_learning_array.each_with_index { |e, e_idx| lock_info[:index] << e_idx if lock_info[:color].include?(e) }
     end
     learning_array.pop while learning_array.length > total_matches
+    next unless total_matches == 4
+
+    purge_hash_updater(purge_hash, rotated_learning_array) if feedback[:color] == 4
     return true if feedback[:color_and_pos] == 4
+
+    break
   end
-  permutation_creator(lock_info, learning_array, pattern)
+  permutation_creator(purge_hash, lock_info, learning_array, pattern)
 end
 
-def permutation_creator(lock_info, learning_array, pattern)
-  purge_hash = { index: [], color: [] }
+def permutation_creator(purge_hash, lock_info, learning_array, pattern)
   permutation_array = []
   learning_array.permutation { |perm| permutation_array << perm }
   permutation_array.uniq.each do |uniq_perm|
@@ -73,11 +78,16 @@ def permutation_creator(lock_info, learning_array, pattern)
     break if feedback[:color_and_pos] == 4
     next unless feedback[:color] == 4
 
-    uniq_perm.each_with_index do |color, idx|
-      purge_hash[:color] << color
-      purge_hash[:index] << idx
-    end
+    purge_hash_updater(purge_hash, uniq_perm)
   end
+end
+
+def purge_hash_updater(purge_hash, guess_array)
+  guess_array.each_with_index do |color, idx|
+    purge_hash[:color] << color
+    purge_hash[:index] << idx
+  end
+  purge_hash
 end
 
 def permutation_purger(purge_hash, perm)
