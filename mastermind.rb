@@ -91,7 +91,6 @@ def purge_hash_updater(purge_hash, guess_array)
     purge_hash[:color] << color
     purge_hash[:index] << idx
   end
-  purge_hash
 end
 
 def permutation_purger(purge_hash, perm)
