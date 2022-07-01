@@ -75,8 +75,7 @@ def permutation_creator(purge_hash, lock_info, learning_array, pattern)
   permutation_array = []
   learning_array.permutation { |perm| permutation_array << perm }
   permutation_array.uniq.each do |uniq_perm|
-    next unless lock_info[:index].empty? || permutation_match_checker(lock_info, uniq_perm)
-    next unless purge_hash[:index].empty? || permutation_purger(purge_hash, uniq_perm)
+    next unless permutation_validator(lock_info, purge_hash, uniq_perm)
 
     feedback = guess_checker(uniq_perm, pattern)
     break if feedback[:color_and_pos] == 4
@@ -86,21 +85,19 @@ def permutation_creator(purge_hash, lock_info, learning_array, pattern)
   end
 end
 
+def permutation_validator(lock_info, purge_hash, perm)
+  return true if lock_info[:index].empty? && purge_hash[:index].empty?
+
+  purge_hash[:color].each_with_index { |color, idx| return false if perm[purge_hash[:index][idx]] == color } unless purge_hash[:index].empty?
+  lock_info[:color].each_with_index { |color, idx| return false unless perm[lock_info[:index][idx]] == color } unless lock_info[:index].empty?
+  true
+end
+
 def purge_hash_updater(purge_hash, guess_array)
   guess_array.each_with_index do |color, idx|
     purge_hash[:color] << color
     purge_hash[:index] << idx
   end
-end
-
-def permutation_purger(purge_hash, perm)
-  purge_hash[:color].each_with_index { |color, idx| return false if perm[purge_hash[:index][idx]] == color }
-  true
-end
-
-def permutation_match_checker(lock_info, perm)
-  lock_info[:color].each_with_index { |color, idx| return false unless perm[lock_info[:index][idx]] == color }
-  true
 end
 
 def game
