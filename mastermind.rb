@@ -53,17 +53,12 @@ def computer_guesser(pattern)
     feedback = guess_checker(rotated_learning_array, pattern)
     total_matches = feedback[:color_and_pos] + feedback[:color]
     if learning_array.uniq.length >= 2 && total_matches == feedback[:color_and_pos]
-      rotated_learning_array.each_with_index do |e, e_idx|
-        next if e == color
-
-        lock_info[:color] << e
-        lock_info[:index] << e_idx
-      end
+      hash_updater(lock_info, rotated_learning_array, color)
     end
     learning_array.pop while learning_array.length > total_matches
     next unless total_matches == 4
 
-    purge_hash_updater(purge_hash, rotated_learning_array) if feedback[:color] == 4
+    hash_updater(purge_hash, rotated_learning_array) if feedback[:color] == 4
     return true if feedback[:color_and_pos] == 4
 
     break
@@ -81,7 +76,7 @@ def permutation_creator(purge_hash, lock_info, learning_array, pattern)
     break if feedback[:color_and_pos] == 4
     next unless feedback[:color] == 4
 
-    purge_hash_updater(purge_hash, uniq_perm)
+    hash_updater(purge_hash, uniq_perm)
   end
 end
 
@@ -93,10 +88,12 @@ def permutation_validator(lock_info, purge_hash, perm)
   true
 end
 
-def purge_hash_updater(purge_hash, guess_array)
+def hash_updater(hash, guess_array, ignore = nil)
   guess_array.each_with_index do |color, idx|
-    purge_hash[:color] << color
-    purge_hash[:index] << idx
+    next if color == ignore
+
+    hash[:color] << color
+    hash[:index] << idx
   end
 end
 
