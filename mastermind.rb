@@ -100,7 +100,7 @@ def permutation_purger(purge_hash, perm)
 end
 
 def permutation_match_checker(lock_info, perm)
-  lock_info[:index].each_with_index { |perm_idx, color_idx| return false unless perm[perm_idx] == lock_info[:color][color_idx] }
+  lock_info[:color].each_with_index { |color, idx| return false unless perm[lock_info[:index][idx]] == color }
   true
 end
 
