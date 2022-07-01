@@ -53,8 +53,12 @@ def computer_guesser(pattern)
     feedback = guess_checker(rotated_learning_array, pattern)
     total_matches = feedback[:color_and_pos] + feedback[:color]
     if learning_array.uniq.length >= 2 && total_matches == feedback[:color_and_pos]
-      lock_info[:color].concat(rotated_learning_array.reject { |e| e == color })
-      rotated_learning_array.each_with_index { |e, e_idx| lock_info[:index] << e_idx if lock_info[:color].include?(e) }
+      rotated_learning_array.each_with_index do |e, e_idx|
+        next if e == color
+
+        lock_info[:color] << e
+        lock_info[:index] << e_idx
+      end
     end
     learning_array.pop while learning_array.length > total_matches
     next unless total_matches == 4
