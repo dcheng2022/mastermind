@@ -1,5 +1,17 @@
 require 'pry-byebug'
 
+class Codemaker
+  def initialize(name)
+    @name = name
+  end
+end
+
+class Codebreaker
+  def initialize(name)
+    @name = name
+  end
+end
+
 def code_creator
   choices = %w[red blue green orange purple yellow blank]
   pattern = Array.new(4).map { choices.sample }
@@ -115,6 +127,4 @@ def game
   end
 end
 
-#game
-
-computer_guesser(code_creator)
+game
