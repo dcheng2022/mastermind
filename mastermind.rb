@@ -67,9 +67,9 @@ class Codebreaker < Player
       end
     end
 
-    learning_array = []
-    lock_info = { index: [], color: [] }
-    purge_hash = { index: [], color: [] }
+    self.learning_array = []
+    self.lock_info = { index: [], color: [] }
+    self.purge_hash = { index: [], color: [] }
     total_matches = 0
     @@choices.shuffle.each_with_index do |color, idx|
       @@tries += 1
@@ -89,14 +89,14 @@ class Codebreaker < Player
 
       break
     end
-    permutation_creator(purge_hash, lock_info, learning_array, codemaker)
+    permutation_creator(codemaker)
   end
 
-  def permutation_creator(purge_hash, lock_info, learning_array, codemaker)
+  def permutation_creator(codemaker)
     permutation_array = []
     learning_array.permutation { |perm| permutation_array << perm }
     permutation_array.uniq.each do |uniq_perm|
-      next unless permutation_validator(lock_info, purge_hash, uniq_perm)
+      next unless permutation_validator(uniq_perm)
 
       @@tries += 1
       p uniq_perm.join(' ')
@@ -117,13 +117,17 @@ class Codebreaker < Player
     end
   end
 
-  def permutation_validator(lock_info, purge_hash, perm)
+  def permutation_validator(perm)
     return true if lock_info[:index].empty? && purge_hash[:index].empty?
 
     purge_hash[:color].each_with_index { |color, idx| return false if perm[purge_hash[:index][idx]] == color } unless purge_hash[:index].empty?
     lock_info[:color].each_with_index { |color, idx| return false unless perm[lock_info[:index][idx]] == color } unless lock_info[:index].empty?
     true
   end
+
+  private
+
+  attr_accessor :lock_info, :purge_hash, :learning_array
 end
 
 def select_role
