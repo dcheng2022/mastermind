@@ -23,7 +23,7 @@ class Codemaker < Player
     if name == 'Computer'
       self.pattern = Array.new(4).map { @@choices.sample }
     else
-      puts 'Enter your code.'
+      puts "Enter your code composed of the following: #{@@choices.join(' ')}"
       self.pattern = enter_input
     end
   end
@@ -60,7 +60,7 @@ class Codebreaker < Player
   @@tries = 0
 
   def guess(codemaker)
-    puts 'Enter a guess.'
+    puts "Enter a guess composed of the following: #{@@choices.join(' ')}"
     unless name == 'Computer'
       loop do
         @@tries += 1
