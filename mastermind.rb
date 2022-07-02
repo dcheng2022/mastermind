@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 class Player
   @@choices = %w[red blue green orange purple yellow blank]
   attr_reader :name
