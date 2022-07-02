@@ -140,8 +140,7 @@ def select_role
 end
 
 def game
-  puts 'Welcome to Mastermind! This is a code-breaking game for two players, the codemaker and codebreaker. The codemaker chooses a pattern of four colors or blanks, which may or may not repeat. The codebreaker tries to guess the pattern, both in order and color, within 12 turns. The codemaker provides feedback on the number of close matches and exact matches each turn. Guesses are made until the codebreaker guesses correctly or runs out of turns.'
-  puts 'Would you like to play as the codemaker or codebreaker?'
+  puts "Welcome to Mastermind!\n\nThis is a code-breaking game for two players, the codemaker and codebreaker.\n\nThe codemaker chooses a pattern of four colors or blanks, which may or may not repeat. The codebreaker tries to guess the pattern, both in order and color, within 12 turns.\n\nThe codemaker provides feedback on the number of close matches and exact matches each turn. Guesses are made until the codebreaker guesses correctly or runs out of turns.\n\nWould you like to play as the codemaker or codebreaker?"
   case select_role
   when 'codebreaker'
     codebreaker = Codebreaker.new('Player')
